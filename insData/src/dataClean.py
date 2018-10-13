@@ -1,5 +1,6 @@
 import pandas as pd
 import ast
+import re
 
 
 class DataClean:
@@ -12,11 +13,31 @@ class DataClean:
         self.disease_except_pregnancy = "../res/data/disease_except_pregnancy.csv"
         self.medicare_except_pregnancy = "../res/data/medicare_except_pregnancy.csv"
         self.disease_list = "../res/data/disease_list.txt"
+        self.disease_cleaned_by_zn = "../res/data/disease_cleaned_by_zn.csv"
+        self.correct_age_range_file = "../res/file/投保年龄更正.xlsx"
+        self.correct_age_range_data = "../res/data/correct_age_range_data.csv"
+        self.correct_age_range_data_twice = "../res/data/correct_age_range_data_twice.csv"
+        # twice clean, correct some age-range data
+        self.age_range_series_data = "../res/data/age_range_series_data.csv"
+        self.count = 0
+        self.age_segment_list = ['0岁', '1-7天', '8-15天', '16-27天', '28-30天', '31-50天', '50天-364天', '1-3岁', '4-6岁',
+                                 '7-11岁', '12-17岁', '18-22岁', '23-30岁', '31-40岁', '41-49岁', '50-54岁', '55-59岁',
+                                 '60-64岁', '65-69岁', '70-74岁', '75-79岁', '80岁以上']
+        self.reg_age_range_list = [r'0岁(.)*', r'[1-7]日', r'([8-9]|(1[0-5]))日', r'((1[6-9])|(2[0-7]))日',
+                                   r'(28|29|30)日',
+                                   r'((3[1-9])|(4[0|9])|50)日',
+                                   r'(([5-9][0-9])|([1-2][0-9][0-9])|(3([0-5][0-9])|(6[0-5])))日',
+                                   r'[1-3]岁', r'[4-6]岁', r'([7-9]|(1[0-1]))岁', r'1[2-7]岁', r'((1[8-9])|(2[0-2]))岁',
+                                   r'((2[3-9])|30)岁', r'((3[1-9])|40)岁', r'4[1-9]岁', r'5[0-4]岁', r'5[5-9]岁', r'6[0-4]岁',
+                                   r'6[5-9]岁', r'7[0-4]岁', r'7[5-9]岁', '(([8-9][0-9])|(1[0-9][0-9]))岁']
+        self.age_segment_file = "../res/data/age_segment_file.csv"
 
     def test(self):
-        df_disease_raw = pd.read_csv(self.disease_raw)
-        df_disease_set = df_disease_raw[(df_disease_raw['疾病的集合'].str.contains(r'(*)'))]
-        print(df_disease_set.count())
+        age = '18岁'
+        # for reg_age in self.reg_age_range_list:
+        pattern = re.compile(r'(1[8-9])|(2[1-2])岁')
+        res = re.match(pattern, age)
+        print(res.groups())
 
     def generate_insurance_pregnancy(self):
         df_disease_once_clean = pd.read_csv(self.disease_once_clean)
@@ -70,7 +91,52 @@ class DataClean:
         with open(self.disease_list, 'w', encoding='utf-8') as file:
             file.write(str(disease_list))
 
+    def reg_sentence(self, string):
+        # print(string)
+        pattern = re.compile(r'.*{.*}.*|.*:.*')
+        res = re.match(pattern, string)
+        if res is not None:
+            self.count += 1
+        print(res)
+
+    def clean_age_range(self):
+        df_disease = pd.read_csv(self.correct_age_range_data_twice)
+        for index, row in df_disease.iterrows():
+            if row['投保范围_开始年龄结束年龄'] != '不详' and row['投保范围_开始年龄结束年龄'] != '无':
+                age_range_array = ast.literal_eval(row['投保范围_开始年龄结束年龄'])
+                if len(age_range_array) == 2:
+                    start_age = age_range_array[0]
+                    end_age = age_range_array[1]
+                    # print(row['投保范围_开始年龄结束年龄'], self.reg_age_range(start_age), self.reg_age_range(end_age))
+                    value = [start_age, end_age, self.reg_age_range(start_age), self.reg_age_range(end_age)]
+                    print(str(value))
+                    df_disease.loc[df_disease['filename'] == row['filename'], '投保范围_开始年龄结束年龄'] = str(value)
+                else:
+                    df_disease.loc[df_disease['filename'] == row['filename'], '投保范围_开始年龄结束年龄'] = '特殊数据' + row[
+                        '投保范围_开始年龄结束年龄']
+            else:
+                df_disease.loc[df_disease['filename'] == row['filename'], '投保范围_开始年龄结束年龄'] = '无'
+        df_disease.to_csv(self.age_segment_file)
+
+    def reg_age_range(self, age):
+        for i in range(self.reg_age_range_list.__len__()):
+            reg_age = self.reg_age_range_list[i]
+            pattern = re.compile(reg_age)
+            res = re.match(pattern, age)
+            if res is not None:
+                # print(age[res.start():res.end()])
+                return self.age_segment_list[i]
+
+
+def correct_age_range(self):  # 投保年龄修改
+    df_disease = pd.read_csv(self.disease_once_clean)
+    df_correct_file = pd.read_excel(self.correct_age_range_file)
+    for index, row in df_correct_file.iterrows():
+        print(row['录入错误'], row['正确值'])
+        df_disease.loc[df_disease['filename'] == row['录入错误'], '投保范围_开始年龄结束年龄'] = row['正确值']
+    df_disease.to_csv(self.correct_age_range_data)
+
 
 if __name__ == '__main__':
     data_clean = DataClean()
-    data_clean.test()
+    data_clean.clean_age_range()
