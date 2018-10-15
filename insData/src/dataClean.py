@@ -31,13 +31,14 @@ class DataClean:
                                    r'((2[3-9])|30)岁', r'((3[1-9])|40)岁', r'4[1-9]岁', r'5[0-4]岁', r'5[5-9]岁', r'6[0-4]岁',
                                    r'6[5-9]岁', r'7[0-4]岁', r'7[5-9]岁', '(([8-9][0-9])|(1[0-9][0-9]))岁']
         self.age_segment_file = "../res/data/age_segment_file.csv"
+        self.disease_yiqing = "../res/data/disease_yiqing.csv"
+        self.disease_set_package = "../res/data/disease_set_package.csv"
 
     def test(self):
-        age = '18岁'
-        # for reg_age in self.reg_age_range_list:
-        pattern = re.compile(r'(1[8-9])|(2[1-2])岁')
-        res = re.match(pattern, age)
-        print(res.groups())
+        str = '{123恶性肿瘤bbbbbbbbb主动脉手术456}'
+        pattern = re.compile('恶性肿瘤.*主动脉手术')
+        res = re.search(pattern, str)
+        print(str[0:res.start()] + '包1' + str[res.end():str.__len__()])
 
     def generate_insurance_pregnancy(self):
         df_disease_once_clean = pd.read_csv(self.disease_once_clean)
@@ -52,32 +53,41 @@ class DataClean:
         df_medicare_except_clean.to_csv(self.medicare_except_pregnancy)
 
     def package_disease_set(self):
-        df_disease = pd.read_csv(self.disease_except_pregnancy)
+        df_disease = pd.read_csv(self.disease_yiqing)
         df_package = df_disease[(df_disease['疾病的集合'].str.contains('恶性肿瘤')) &
-                                (df_disease['疾病的集合'].str.contains('急性心肌梗塞')) &
-                                (df_disease['疾病的集合'].str.contains('脑中风后遗症')) &
-                                (df_disease['疾病的集合'].str.contains('重大器官移植术或造血干细胞移植术')) &
-                                (df_disease['疾病的集合'].str.contains('冠状动脉搭桥术')) &
-                                (df_disease['疾病的集合'].str.contains('终末期肾病')) &
-                                (df_disease['疾病的集合'].str.contains('多个肢体缺失')) &
-                                (df_disease['疾病的集合'].str.contains('急性或亚急性重症肝炎')) &
-                                (df_disease['疾病的集合'].str.contains('良性脑肿瘤')) &
-                                (df_disease['疾病的集合'].str.contains('慢性肝功能衰竭失代偿期')) &
-                                (df_disease['疾病的集合'].str.contains('脑炎后遗症')) &
-                                (df_disease['疾病的集合'].str.contains('深度昏迷')) &
-                                (df_disease['疾病的集合'].str.contains('双耳失聪')) &
-                                (df_disease['疾病的集合'].str.contains('双目失明')) &
-                                (df_disease['疾病的集合'].str.contains('瘫痪')) &
-                                (df_disease['疾病的集合'].str.contains('心脏瓣膜手术')) &
-                                (df_disease['疾病的集合'].str.contains('严重阿尔茨海默病')) &
-                                (df_disease['疾病的集合'].str.contains('严重脑损伤')) &
-                                (df_disease['疾病的集合'].str.contains('严重帕金森病')) &
-                                (df_disease['疾病的集合'].str.contains('严重Ⅲ度烧伤')) &
-                                (df_disease['疾病的集合'].str.contains('严重原发性肺动脉高压')) &
-                                (df_disease['疾病的集合'].str.contains('严重运动神经元病')) &
-                                (df_disease['疾病的集合'].str.contains('语言能力丧失')) &
-                                (df_disease['疾病的集合'].str.contains('重型再生障碍性贫血')) &
+                                # (df_disease['疾病的集合'].str.contains('急性心肌梗塞')) &
+                                # (df_disease['疾病的集合'].str.contains('脑中风后遗症')) &
+                                # (df_disease['疾病的集合'].str.contains('重大器官移植术或造血干细胞移植术')) &
+                                # (df_disease['疾病的集合'].str.contains('冠状动脉搭桥术')) &
+                                # (df_disease['疾病的集合'].str.contains('终末期肾病')) &
+                                # (df_disease['疾病的集合'].str.contains('多个肢体缺失')) &
+                                # (df_disease['疾病的集合'].str.contains('急性或亚急性重症肝炎')) &
+                                # (df_disease['疾病的集合'].str.contains('良性脑肿瘤')) &
+                                # (df_disease['疾病的集合'].str.contains('慢性肝功能衰竭失代偿期')) &
+                                # (df_disease['疾病的集合'].str.contains('脑炎后遗症')) &
+                                # (df_disease['疾病的集合'].str.contains('深度昏迷')) &
+                                # (df_disease['疾病的集合'].str.contains('双耳失聪')) &
+                                # (df_disease['疾病的集合'].str.contains('双目失明')) &
+                                # (df_disease['疾病的集合'].str.contains('瘫痪')) &
+                                # (df_disease['疾病的集合'].str.contains('心脏瓣膜手术')) &
+                                # (df_disease['疾病的集合'].str.contains('严重阿尔茨海默病')) &
+                                # (df_disease['疾病的集合'].str.contains('严重脑损伤')) &
+                                # (df_disease['疾病的集合'].str.contains('严重帕金森病')) &
+                                # (df_disease['疾病的集合'].str.contains('严重Ⅲ度烧伤')) &
+                                # (df_disease['疾病的集合'].str.contains('严重原发性肺动脉高压')) &
+                                # (df_disease['疾病的集合'].str.contains('严重运动神经元病')) &
+                                # (df_disease['疾病的集合'].str.contains('语言能力丧失')) &
+                                # (df_disease['疾病的集合'].str.contains('重型再生障碍性贫血')) &
                                 (df_disease['疾病的集合'].str.contains('主动脉手术'))]
+        # df_package['疾病的集合'].to_csv(self.disease_set_package)
+        for index, row in df_disease.iterrows():
+            disease_set = row['疾病的集合']
+            pattern = re.compile('恶性肿瘤.*主动脉手术|主动脉手术.*恶性肿瘤')
+            res = re.search(pattern, str(disease_set))
+            if res is not None:
+                value = disease_set[0:res.start()] + '包1' + disease_set[res.end():len(disease_set)]
+                df_disease.loc[df_disease['filename'] == row['filename'], '疾病的集合'] = value
+        df_disease['疾病的集合'].to_csv(self.disease_set_package)
         print(df_package.count())
 
     def get_disease_list(self):
@@ -139,4 +149,4 @@ def correct_age_range(self):  # 投保年龄修改
 
 if __name__ == '__main__':
     data_clean = DataClean()
-    data_clean.clean_age_range()
+    data_clean.package_disease_set()
