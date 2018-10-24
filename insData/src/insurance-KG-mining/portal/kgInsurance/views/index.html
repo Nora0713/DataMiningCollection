@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>保险AI大脑</title>
+    <link href="assets/img/favicon.ico" rel="shortcut icon" />
+    <!-- Bootstrap Styles-->
+    <link href="assets/css/bootstrap.css" rel="stylesheet" />
+    <!-- FontAwesome Styles-->
+    <link href="assets/css/font-awesome.css" rel="stylesheet" />
+    <!-- Google Fonts-->
+    <link href="assets/css/custom-styles.css" rel="stylesheet" />
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
+
+    <script src="assets/js/jquery-1.10.2.js"></script>
+    <script src="assets/echarts.min.js"></script>
+    <script src="assets/countChinese.js"></script>
+    <script>
+        $(document).ready(function(){
+            var nodeColor=["Concept","ConceptAttribute","Product","Company","CompanyAttribute","ProductAttribute"];
+            var nodedata=[];
+            var link=[];
+            var entity1="人寿保险";
+            var node={};
+            var cnt=1;
+            var cnt_node=1;
+            node['des']=entity1;
+            if(getByteLen(entity1)>=12)
+            {
+                entity1=entity1.substr(0,6)+"...";
+            }
+            node['name']=entity1;
+            cnt_node=cnt_node+1;
+            node['draggable'] = true;
+            node['category']=0;
+            cnt=cnt+1;
+            nodedata.push(node);
+
+            $.getJSON("assets/source.json",function(data){
+                $.each(data, function (infoIndex, info){
+                    var relation=info["type"];
+                    var name=info["name"];
+
+                    var kind=info["label"];
+                    var node={};
+                    var edge={};
+
+                    node['des']=name;
+                    if(getByteLen(name)>=12)
+                    {
+                       name=name.substr(0,6)+"...";
+                    }
+                    node['name']=name;
+                    node['draggable']=true;
+
+                    for (var i=0;i<nodeColor.length;i++)
+                    {
+                        if(kind==nodeColor[i])
+                        {
+                            node['category']=i+1;
+                        }
+                    }
+                    nodedata.push(node);
+                    edge['source']=entity1;
+                    edge['target']=name;
+                    cnt_node=cnt_node+1;
+                    edge['value']=relation;
+                    edge['symbolSize'] = 10;
+
+                    link.push(edge);
+
+                });
+                var myChart = echarts.init(document.getElementById('kg_graph'));
+                option = {
+                    title: {text: ''},
+                    tooltip: {
+                        formatter: function (x) {
+                            return x.data.des;
+                        }
+                    },
+                    animationDurationUpdate: 1500,
+                    animationEasingUpdate: 'quinticInOut',
+                    label: {
+                        normal: {
+                            show: true,
+                            textStyle: {
+                                fontSize: 12
+                            },
+                        }
+                    },
+                    legend: {
+                        x: "center",
+                        show: false
+                    },
+                    series: [
+                        {
+                            type: 'graph',
+                            layout: 'force',
+                            symbolSize: 45,
+                            focusNodeAdjacency: true,
+                            roam: true,
+                            edgeSymbol: ['none', 'arrow'],
+                            categories: [{
+                                name: '0',
+                                itemStyle: {
+                                    normal: {
+                                        color: "#009800",
+                                    }
+                                }
+                            }, {
+                                name: '1',
+                                itemStyle: {
+                                    normal: {
+                                        color: "#4592FF",
+                                    }
+                                }
+                            }, {
+                                name: '2',
+                                itemStyle: {
+                                    normal: {
+                                        color: "#DF3456",
+                                    }
+                                }
+                            },{
+                                name: '3',
+                                itemStyle: {
+                                    normal: {
+                                        color: "#FFFF00",
+                                    }
+                                }
+                            },
+                                {
+                                    name: '5',
+                                    itemStyle: {
+                                        normal: {
+                                            color: "#836FFF",
+                                        }
+                                    }
+                                },
+                                {
+                                    name: '6',
+                                    itemStyle: {
+                                        normal: {
+                                            color: "#FF7F24",
+                                        }
+                                    }
+                                }
+                            ],
+                            label: {
+                                normal: {
+                                    show: true,
+                                    textStyle: {
+                                        fontSize: 12,
+                                    },
+                                }
+                            },
+                            force: {
+                                repulsion: 1000
+                            },
+                            edgeSymbolSize: [4, 50],
+                            edgeLabel: {
+                                normal: {
+                                    show: true,
+                                    textStyle: {
+                                        fontSize: 10
+                                    },
+                                    formatter: "{c}"
+                                }
+                            },
+                            data: nodedata,
+                            links: link,
+                            lineStyle: {
+                                normal: {
+                                    opacity: 0.9,
+                                    width: 2.0,
+                                    curveness: 0,
+                                    color: "#262626"
+                                }
+                            }
+                        }
+                        ]
+                }
+                myChart.setOption(option);
+            });
+        });
+        </script>
+</head>
+<body>
+
+<div id="wrapper">
+    <nav class="navbar navbar-default top-navbar" role="navigation">
+        <div class="navbar-header">
+            <a class="navbar-brand">保险AI大脑</a>
+        </div>
+    </nav>
+    <!--/. NAV TOP  -->
+    <nav class="navbar-default navbar-side" role="navigation">
+        <div class="sidebar-collapse">
+            <ul class="nav" id="main-menu">
+                <li>
+                    <a href="textSearch.html" class="active-menu"><i class="fa fa-desktop"></i>产品文档</a>
+                </li>
+                <li>
+                    <a href="index.html" class="active-menu"><i class="fa fa-bar-chart-o"></i>实体搜索</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <!-- /. NAV SIDE  -->
+    <div id="page-wrapper" >
+        <div id="page-inner">
+                <div class="col-md-12">
+                    <h1 class="page-header">
+                        实体查询
+                    </h1>
+                </div>
+            <!--搜索框-->
+            <div class="col-md-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        输入查询实体名
+                    </div>
+                    <div class="panel-body">
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <div class="form-group">
+                                <input id="searchKGText" class="form-control" placeholder="人寿保险">
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <button id="entitySearch" class="btn btn-primary"  type="submit">搜 索</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--echarts 关系图展示 -->
+            <div class="col-md-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        关系图
+                    </div>
+                    <div class="panel-body">
+                        <div id="kg_graph" style="width: 90%;height:600px;"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        关系列表
+                    </div>
+                    <div class="panel-body">
+                        <table class="table table-striped">
+                    </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+            <!-- /. ROW  -->
+    </div>
+        <!-- /. PAGE INNER  -->
+    </div>
+    <!-- /. PAGE WRAPPER  -->
+<!-- /. WRAPPER  -->
+<!-- JS Scripts-->
+<!-- jQuery Js -->
+
+<!-- Bootstrap Js -->
+<script src="assets/js/bootstrap.min.js"></script>
+<!-- Metis Menu Js -->
+<script src="assets/js/jquery.metisMenu.js"></script>
+<!-- Morris Chart Js -->
+<!-- Custom Js -->
+
+
+</body>
+</html>

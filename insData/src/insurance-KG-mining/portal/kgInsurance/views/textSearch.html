@@ -1,0 +1,135 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>保险AI大脑</title>
+    <link href="assets/img/favicon.ico" rel="shortcut icon" />
+    <!-- Bootstrap Styles-->
+    <link href="assets/css/bootstrap.css" rel="stylesheet" />
+    <!-- FontAwesome Styles-->
+    <link href="assets/css/font-awesome.css" rel="stylesheet" />
+    <!-- Google Fonts-->
+    <link href="assets/css/custom-styles.css" rel="stylesheet" />
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
+
+    <script src="assets/js/jquery-1.10.2.js"></script>
+    <script src="assets/productSearch.js"></script>
+
+</head>
+<body>
+
+<div id="wrapper">
+    <nav class="navbar navbar-default top-navbar" role="navigation">
+        <div class="navbar-header">
+            <a class="navbar-brand">保险AI大脑</a>
+        </div>
+    </nav>
+    <!--/. NAV TOP  -->
+    <nav class="navbar-default navbar-side" role="navigation">
+        <div class="sidebar-collapse">
+            <ul class="nav" id="main-menu">
+                <li>
+                    <a href="textSearch.html" class="active-menu"><i class="fa fa-desktop"></i>产品文档</a>
+                </li>
+                <li>
+                    <a href="index.html" class="active-menu"><i class="fa fa-bar-chart-o"></i>实体搜索</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div id="page-wrapper" >
+        <div id="page-inner">
+            <div class="col-md-12">
+                <h1 class="page-header">
+                    产品文档
+                </h1>
+            </div>
+            <!--搜索框-->
+            <div class="col-md-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        产品查询
+                    </div>
+                    <div class="panel-body">
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <div class="form-group">
+                                <input id="productName" class="form-control" placeholder="">
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <button id="productSearch" class="btn btn-primary" onclick="productSearch()" type="submit">搜 索</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        公司查询
+                    </div>
+                    <div class="panel-body">
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <div class="form-group">
+                                <input id="companyName" class="form-control" placeholder="">
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <button id="companySearch" class="btn btn-primary" onclick="companySearch()"  type="submit">搜 索</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        类型查询
+                    </div>
+                    <div class="panel-body">
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <div class="form-group">
+                                <select id="type3" class="form-control">
+                                    <option></option>
+                                    <option>疾病保险</option>
+                                    <option>护理保险</option>
+                                    <option>医疗保险</option>
+                                    <option>失能收入损失保险</option>
+                                    <option>其他</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <button id="typeSefarch" class="btn btn-primary" onclick="typeSearch()" type="submit">搜 索</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        查询结果
+                    </div>
+                    <div class="panel-body">
+                        <div class="panel-group" id="showResult"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!--echarts 关系图展示 -->
+        </div>
+        <!-- /. ROW  -->
+    </div>
+    <!-- /. NAV SIDE  -->
+</div>
+<!-- /. PAGE WRAPPER  -->
+<!-- /. WRAPPER  -->
+<!-- JS Scripts-->
+<!-- jQuery Js -->
+
+<!-- Bootstrap Js -->
+<script src="assets/js/bootstrap.min.js"></script>
+<!-- Metis Menu Js -->
+<script src="assets/js/jquery.metisMenu.js"></script>
+<!-- Morris Chart Js -->
+<!-- Custom Js -->
+
+
+</body>
+</html>
