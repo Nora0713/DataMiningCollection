@@ -1,5 +1,5 @@
 import pandas as pd
-import re
+import json
 
 
 def get_all_attributions():
@@ -21,4 +21,28 @@ def get_all_attributions():
     print(str(label_json).replace('\'', '"'), file=save_label)
 
 
-get_all_attributions()
+def get_new_labels():
+    with open(
+            '/Users/zhaoning/Documents/project/dataMining/userIntent/insData/src/nora/data/file/label_relation_new.json',
+            encoding='utf-8-sig') as j:
+        save = open(
+            '/Users/zhaoning/Documents/project/dataMining/userIntent/insData/src/nora/new_disease/test.txt', 'a+',
+            encoding='utf-8')
+        lines = j.readlines()
+        json_raw_string = ""
+        for line in lines:
+            json_raw_string = json_raw_string + line
+        data = json.loads(json_raw_string)
+        labels = data['label']
+        entity2_labels = []
+        for item in labels:
+            if item['label_front'] not in entity2_labels:
+                entity2_labels.append(item['label_front'])
+            if item['label_after'] not in entity2_labels:
+                entity2_labels.append(item['label_after'])
+        entity2_labels.sort()
+        for item in entity2_labels:
+            print('"'+item+'",', file=save)
+
+
+get_new_labels()

@@ -2,3 +2,4 @@
 venv/
 insQA/res/
 insQA/src/insurance-KG-mining/
+*.icloud
