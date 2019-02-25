@@ -1,0 +1,33 @@
+import json
+
+have_used_file_list=[]
+dir_dict={'result':[]}
+
+all_output = "/Users/zhaoning/Documents/project/dataMining/userIntent/insData/src/nora/data/disease_related_1207/all_output.json"
+disease_output = "/Users/zhaoning/Documents/project/dataMining/userIntent/insData/src/nora/data/disease_related_1207/disease_output.json"
+file = open(all_output, 'r')
+rst_j = json.load(file)
+for l in rst_j['result']:
+    already_in_there = False
+    for data in dir_dict['result']:
+        if data['data_id'] == l['data_id']:
+            data['spans'] = data['spans'] + l['spans']
+            already_in_there = True
+    if not already_in_there:
+        dir_dict['result'].append(l)
+
+file2=open(disease_output,'r')
+rst_j=json.load(file2)
+for l in rst_j['result']:
+    already_in_there=False
+    for data in dir_dict['result']:
+        if data['data_id']==l['data_id']:
+            data['spans']=data['spans']+l['spans']
+            already_in_there=True
+    if not already_in_there:
+        dir_dict['result'].append(l)
+
+jsonObj = json.dumps(dir_dict, ensure_ascii=False)
+fileJson = open('disease_output_1207.json', 'w', encoding='utf-8')
+fileJson.write(jsonObj)
+fileJson.close()
